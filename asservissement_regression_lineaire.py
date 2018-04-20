@@ -5,14 +5,16 @@ __author__ = 'Clément'
 import numpy as np
 import time, math
 
+
 class AsservissementRegression:
     def __init__(self, y_mesurees, duree):
         self.MESURES = y_mesurees
         self.T = np.linspace(0, duree, len(y_mesurees))
-        print "taille", len(y_mesurees)
-        print "durée",duree, len(self.T)
+        print("taille", len(y_mesurees))
+        print("durée",duree, len(self.T))
+
     def calculer_c(self, mu):
-        #print np.dot(self.T[:mu].T, self.T[:mu])
+        # print np.dot(self.T[:mu].T, self.T[:mu])
         return np.dot(np.dot(1/np.dot(self.T[:mu].T, self.T[:mu]), self.T[:mu].T), self.MESURES[:mu])
 
     def calculer_erreur(self):
@@ -21,11 +23,11 @@ class AsservissementRegression:
         :return ecart: c'est l'écart par rapport à l'équilibre
         """
         ecart_droite = []
-        #Faudrait-il créer une classe individu?
+        # Faudrait-il créer une classe individu?
         mu = np.argmax(self.MESURES)-1
-        print "mu",mu
+        print("mu", mu)
         c = self.calculer_c(mu)
-        print "c", c
+        print("c", c)
         """
         mu 30
         c 8524.0818235
@@ -43,13 +45,16 @@ class AsservissementRegression:
         erreur 334758.041958
         """
         valeurs_modele_droite = np.array([f_droite(c, t) for t in self.T[:mu]])
-        #print self.MESURES[:mu].shape, valeurs_modele_droite.shape
+        # print self.MESURES[:mu].shape, valeurs_modele_droite.shape
         diff = self.MESURES[:mu] - valeurs_modele_droite
         ecart = np.dot(diff,diff.T)
         return ecart
 
+
 def f_aperiodique(beta, alpha, A, B, t):
     return math.exp(-beta*t)*(A*math.exp(alpha*t)+B*math.exp(-alpha*t))
+
+
 def f_pseudo_periodique(beta, omega, A, B, t):
     """
     print "f_pseudo_perio"
@@ -59,28 +64,29 @@ def f_pseudo_periodique(beta, omega, A, B, t):
     print math.sin(omega*t)
     """
     return  math.exp(-beta*t)*(A*math.cos(omega*t)+B*math.sin(omega*t))
+
+
 def f_droite(c, t):
     return c*t
-
 
 
 if __name__ == "__main__":
     nom_fichier = "donnees_vitesse.txt"
 
-    #-----------------------------------
-    #mesures
+    # -----------------------------------
+    # mesures
     mesures = np.genfromtxt(nom_fichier, delimiter = "\t")
     mesures_vitesse = mesures[:,1]
     mesures_commande = mesures[:,2]
     mesures_reponse = mesures[:,3]
-    #durée en ms
+    # durée en ms
     duree = 1.500
-    #----------------------------------
+    # ----------------------------------
     t1 = time.time()
-    #C'est ici qu'on récupère la valeur à donner
+    # C'est ici qu'on récupère la valeur à donner
     asserivssement = AsservissementRegression(mesures_vitesse, duree)
     erreur = asserivssement.calculer_erreur()
-    print "erreur", erreur
+    print("erreur", erreur)
     """
     plt.plot(T, valeur_modele, 'r')
     plt.plot(T, mesures_vitesse, "b")

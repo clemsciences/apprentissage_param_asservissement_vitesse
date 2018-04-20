@@ -102,7 +102,7 @@ class LisseurGenetique:
         A = individu[4]
         B = individu[5]
         eta = individu[6]
-        print "individu", individu
+        print("individu", individu)
         if individu[7] == "P":
             valeurs_modele = np.array([self.f_pseudo_periodique(beta, omega, A, B, eta, t - self.T[mu]) for t in self.T[mu:]])
         elif individu[7] == "A":
@@ -237,7 +237,7 @@ class LisseurGenetique:
             #A chaque fois qu'on a un meilleur résultat, on l'affiche
             if minTot > mini:
                 minTot = mini
-                print population[chemin_choisi], minTot
+                print(population[chemin_choisi], minTot)
             if mini == 0:
                 break
             
@@ -261,35 +261,35 @@ class LisseurGenetique:
 if __name__ == "__main__":
     nom_fichier = "donnees_vitesse.txt"
 
-    #-----------------------------------
-    #mesures
+    # -----------------------------------
+    # mesures
     mesures = np.genfromtxt(nom_fichier, delimiter = "\t")
     mesures_vitesse = mesures[:,1]
     mesures_commande = mesures[:,2]
     mesures_reponse = mesures[:,3]
-    #durée en ms
+    # durée en ms
     duree = 1.500
-    #nombre d'individus dans la population
+    # nombre d'individus dans la population
     nPop = 10000
-    #nombre de fonction apériodique
+    # nombre de fonction apériodique
     nAperiodique = 0
     #nombre de génération
     nGeneration = 10
-    #taux de mutation
+    # taux de mutation
     taux = 0.05
     #nombre de meilleur résultat voulu
     nbResultat = 5
-    #----------------------------------
+    # ----------------------------------
     t1 = time.time()
 
     lisseur = LisseurGenetique(mesures_vitesse, duree, nPop, nAperiodique, nGeneration, taux)
     t2 = time.time()
     res =  lisseur.meilleurs_resultats(nbResultat)
-    print "res",res
+    print("res",res)
     t3 = time.time()
-    print "en tout : "+str(t3 - t1)
-    print "génération : "+str(t2 - t1)
-    print "tri : "+str(t3 - t2)
+    print("en tout : "+str(t3 - t1))
+    print("génération : "+str(t2 - t1))
+    print("tri : "+str(t3 - t2))
     #C'est ici qu'on récupère la valeur à donner
     T= np.linspace(0, 1.5, len(mesures_vitesse))
     for i in range(nbResultat):
@@ -300,7 +300,7 @@ if __name__ == "__main__":
         A = res[i][4]
         B = res[i][5]
         eta = res[i][6]
-        print c, mu, beta, omega, A, B, eta
+        print(c, mu, beta, omega, A, B, eta)
         valeur_modele_droite = np.array([lisseur.f_droite(c, t) for t in T[:mu]])
         valeur_modele_pseudo_periodique = np.array([lisseur.f_pseudo_periodique(beta, omega, A, B, eta, t) for t in T[mu:]])
         valeur_modele = np.concatenate((valeur_modele_droite, valeur_modele_pseudo_periodique))
@@ -319,7 +319,7 @@ if __name__ == "__main__":
         A = res[i][4]
         B = res[i][5]
         eta = res[i][6]
-        print c, mu, beta, omega, A, B, eta
+        print(c, mu, beta, omega, A, B, eta)
         valeur_modele_droite = np.array([lisseur.f_droite(c, t) for t in T[:mu]])
         valeur_modele_pseudo_periodique = np.array([lisseur.f_pseudo_periodique(beta, omega, A, B, eta, t) for t in T[mu:]])
         valeur_modele = np.concatenate((valeur_modele_droite, valeur_modele_pseudo_periodique))
